@@ -65,7 +65,7 @@ def highlight_file():
         file_content = response.content
 
         # Process the file without saving to disk
-        if file_extension == ".docx":
+        if file_extension == ".docx" or file_extension == ".doc":
             html_content = convert_docx_to_html(file_content)
 
             # Return the HTML content as a response
