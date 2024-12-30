@@ -8,10 +8,10 @@ from flask_cors import CORS  # Import CORS
 app = Flask(__name__)
 CORS(app)  # Enable CORS for all routes
 
-def convert_pdf_to_html(pdf_bytes):
-    doc = fitz.open(stream=pdf_bytes, filetype="pdf")
+def convert_pdf_to_html(pdf_bytes, file_extension):
+    fileextension = file_extension.replace(".", "")
+    doc = fitz.open(stream=pdf_bytes, filetype=fileextension)
     html_content = ""
-    
     for page_num in range(len(doc)):
         page = doc.load_page(page_num)
         html_content += page.get_text("html")  # Extract HTML for each page
@@ -65,14 +65,14 @@ def highlight_file():
         file_content = response.content
 
         # Process the file without saving to disk
-        if file_extension == ".docx" or file_extension == ".doc":
-            html_content = convert_docx_to_html(file_content)
+        # if file_extension == ".doc":
+        #     html_content = convert_docx_to_html(file_content)
 
-            # Return the HTML content as a response
-            return jsonify({"html": html_content})
+        #     # Return the HTML content as a response
+        #     return jsonify({"html": html_content})
         
-        if file_extension == ".pdf":
-            html_content = convert_pdf_to_html(file_content)
+        if file_extension == ".pdf" or file_extension == ".docx" or file_extension == ".doc":
+            html_content = convert_pdf_to_html(file_content, file_extension)
 
             # Return the HTML content as a response
             return jsonify({"html": html_content})
